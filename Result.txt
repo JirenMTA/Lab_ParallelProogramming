@@ -1,0 +1,28 @@
+>> Using non-omp: 
+	Matrix's size is: 100x100
+	Def meth's time: 0.002836
+>> Using omp: 
+	Matrix's size is: 100x100
+	Def meth's time: 0.0052636
+_______________________________
+>> Using non-omp: 
+	Matrix's size is: 200x200
+	Def meth's time: 0.0461794
+>> Using omp: 
+	Matrix's size is: 200x200
+	Def meth's time: 0.0065566
+_______________________________
+>> Using non-omp: 
+	Matrix's size is: 300x300
+	Def meth's time: 0.157672
+>> Using omp: 
+	Matrix's size is: 300x300
+	Def meth's time: 0.0271408
+_______________________________
+>> Using non-omp: 
+	Matrix's size is: 400x400
+	Def meth's time: 0.262709
+>> Using omp: 
+	Matrix's size is: 400x400
+	Def meth's time: 0.0342787
+_______________________________
