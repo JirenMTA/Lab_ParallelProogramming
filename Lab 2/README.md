@@ -1,4 +1,4 @@
-duration(Lab2)
+[![Typing SVG](https://readme-typing-svg.demolab.com/?lines=First+line+of+text;Second+line+of+text)](https://git.io/typing-svg)
 
 ![image](https://user-images.githubusercontent.com/91962461/197322247-fb5a0f69-0082-4948-91d0-734925d386e8.png)
 
