@@ -1,4 +1,4 @@
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=0FF74B&width=435&lines=Parallel+Programming)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=0FF74B&width=435&lines=Parallel+Programming+Using+OMP)](https://git.io/typing-svg)
 
 
 ![image](https://user-images.githubusercontent.com/91962461/197322247-fb5a0f69-0082-4948-91d0-734925d386e8.png)
