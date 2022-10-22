@@ -1,3 +1,5 @@
+duration(Lab2)
+
 ![image](https://user-images.githubusercontent.com/91962461/197322247-fb5a0f69-0082-4948-91d0-734925d386e8.png)
 
 ![image](https://user-images.githubusercontent.com/91962461/197322255-6b5e2432-3bc2-4e81-8d5a-46c0395d0bfb.png)
