@@ -1,3 +1,4 @@
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=0FF74B&width=435&lines=Parallel+Programming+Using+MPI)](https://git.io/typing-svg)
 
 
 ![image](https://user-images.githubusercontent.com/91962461/202005768-7828107e-2fa5-4337-974d-d92ec60acead.png)
