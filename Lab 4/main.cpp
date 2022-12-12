@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <time.h>
 #include <math.h>
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 32
 
 
 __global__ void gpu_matrix_mult(int* a, int* b, int* c, int m, int n, int k)
@@ -134,66 +134,70 @@ int main(int argc, char const* argv[])
     }
 
     float gpu_elapsed_time_ms, cpu_elapsed_time_ms;
-
-    // some events to count the execution time
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-
-    // start to count execution time of GPU version
     
-    cudaEventRecord(start, 0);
-    clock_t start_gpu = clock();
+    printf("Block size is: %d\n", BLOCK_SIZE);
 
-    // Allocate memory space on the device 
-    int* d_a, * d_b, * d_c;
-    cudaMalloc((void**)&d_a, sizeof(int) * n * n);
-    cudaMalloc((void**)&d_b, sizeof(int) * n * n);
-    cudaMalloc((void**)&d_c, sizeof(int) * n * n);
+    for (int size = 100; size <= n; size+= 100)
+    {
 
-    // copy matrix A and B from host to device memory
-    cudaMemcpy(d_a, h_a, sizeof(int) * n * n, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_b, h_b, sizeof(int) * n * n, cudaMemcpyHostToDevice);
+        // some events to count the execution time
+        cudaEvent_t start, stop;
+        cudaEventCreate(&start);
+        cudaEventCreate(&stop);
 
-    unsigned int grid_rows = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
-    unsigned int grid_cols = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
-    dim3 dimGrid(grid_cols, grid_rows);
-    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
+        // start to count execution time of GPU version
 
-    // Launch kernel 
-  
-    
-    gpu_square_matrix_mult << <dimGrid, dimBlock >> > (d_a, d_b, d_c, n);
-  
-    // Transefr results from device to host 
-    cudaMemcpy(h_c, d_c, sizeof(int) * n * n, cudaMemcpyDeviceToHost);
-    cudaThreadSynchronize();
-    // time counting terminate
-    
-    // compute time elapse on GPU computing
-    
-    gpu_elapsed_time_ms = clock() - start_gpu;
+        cudaEventRecord(start, 0);
+        clock_t start_gpu = clock();
 
-    printf("Time elapsed on matrix multiplication of %dx%d . %dx%d on GPU: %f s - using clock\n\n", n, n, n, n, (gpu_elapsed_time_ms / CLOCKS_PER_SEC) * pow(10.0, 6) / 1000 / 1000);
-    
-    
+        // Allocate memory space on the device 
+        int* d_a, * d_b, * d_c;
+        cudaMalloc((void**)&d_a, sizeof(int)* size* size);
+        cudaMalloc((void**)&d_b, sizeof(int)* size* size);
+        cudaMalloc((void**)&d_c, sizeof(int)* size* size);
 
-    cudaEventRecord(stop, 0);
-    cudaEventSynchronize(stop);
-    cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
-   // printf("Time elapsed on matrix multiplication of %dx%d . %dx%d on GPU: %f s - using CudaEvent\n\n", n, n, n, n, gpu_elapsed_time_ms / 1000);
+        // copy matrix A and B from host to device memory
+        cudaMemcpy(d_a, h_a, sizeof(int)* size* size, cudaMemcpyHostToDevice);
+        cudaMemcpy(d_b, h_b, sizeof(int)* size* size, cudaMemcpyHostToDevice);
+
+        unsigned int grid_rows = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        unsigned int grid_cols = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        dim3 dimGrid(grid_cols, grid_rows);
+        dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
+
+        // Launch kernel 
 
 
-    clock_t start_cpu = clock();
-    
-    cpu_matrix_mult(h_a, h_b, h_cc, n, n, n);
-    
-    cpu_elapsed_time_ms = clock() - start_cpu;
-   
-    printf("Time elapsed on matrix multiplication on CPU: %f s.\n\n", (cpu_elapsed_time_ms / CLOCKS_PER_SEC) * pow(10.0, 6) / 1000/1000);
+        gpu_square_matrix_mult << <dimGrid, dimBlock >> > (d_a, d_b, d_c, size);
 
-    printf("Speed up GPU compare with CPU: %.1f", cpu_elapsed_time_ms / gpu_elapsed_time_ms);
+        // Transefr results from device to host 
+        cudaMemcpy(h_c, d_c, sizeof(int)* size* size, cudaMemcpyDeviceToHost);
+        cudaThreadSynchronize();
+        // time counting terminate
 
+        // compute time elapse on GPU computing
+
+        gpu_elapsed_time_ms = clock() - start_gpu;
+
+        printf("Time elapsed on matrix multiplication of %dx%d . %dx%d on GPU: %f s\n", size, size, size, size, (gpu_elapsed_time_ms / CLOCKS_PER_SEC)* pow(10.0, 6) / 1000 / 1000);
+
+
+
+        cudaEventRecord(stop, 0);
+        cudaEventSynchronize(stop);
+        cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
+        // printf("Time elapsed on matrix multiplication of %dx%d . %dx%d on GPU: %f s - using CudaEvent\n\n", n, n, n, n, gpu_elapsed_time_ms / 1000);
+
+
+        clock_t start_cpu = clock();
+
+        cpu_matrix_mult(h_a, h_b, h_cc, size, size, size);
+
+        cpu_elapsed_time_ms = clock() - start_cpu;
+
+        printf("Time elapsed on matrix multiplication on CPU: %f s.\n\n", (cpu_elapsed_time_ms / CLOCKS_PER_SEC)* pow(10.0, 6) / 1000 / 1000);
+
+    }
   
     return 0;
 }
